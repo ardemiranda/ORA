@@ -2,6 +2,7 @@
 #define _MATRIX_H
 
 #include <iostream>
+#include <map>
 
 
 namespace ORA {
@@ -14,31 +15,14 @@ _MATRIX_TEMPLATE
 class Matrix {
 private:
 	int m, n;
-	TYPE_DATA **values;
+	std::map<int, std::map<int, TYPE_DATA>> values;
 
 public:
 
-	typedef TYPE_DATA (*callback_iterate)(int i, int j, TYPE_DATA A);
-
-	Matrix(int m, int n) : m(m), n(n), values(0) {
-		if (rows() <= 0 || cols() <= 0) {
-			/// @fixme exception
-		}
-
-
-		values = new TYPE_DATA*[m];
-		for (int i = 0; i < m; i++) {
-			values[i] = new TYPE_DATA[n];
-			for (int j = 0; j < m; j++) {
-				values[i][j] = 0;
-			}
-		}
+	Matrix() : m(0), n(0) {
 	}
 	~Matrix() {
-		//delete values;
 	}
-	void init();
-	void init(double **values);
 	int rows() { return m; };
 	int cols() { return n; };
 	_MATRIX operator +(_MATRIX &B);
@@ -54,29 +38,16 @@ private:
 
 };
 
-_MATRIX_METHOD(void, init)() {
-	//_iterateMatrix(_initNull);
-}
-
-_MATRIX_METHOD(void, init)(double **values) {
-	for (int i = 0; i < rows(); i++) {
-		for (int j = 0; j < cols(); j++) {
-			this->values[i][j] = values[i][j];
-		}
-	}
-}
-
-
 
 _MATRIX_METHOD(_MATRIX, operator +)(_MATRIX &B) {
 	if (rows() != B.rows() || cols() != B.cols()) {
 		/// @fixme exception
 	}
-	_MATRIX C(rows(), cols());
+	_MATRIX C;
 
 	for (int i = 0; i < rows(); i++) {
 		for (int j = 0; j < cols(); j++) {
-			set(i, j, get(i, j) + B.get(i, j));
+			C.set(i, j, get(i, j) + B.get(i, j));
 		}
 	}
 
@@ -88,11 +59,11 @@ _MATRIX_METHOD(_MATRIX, operator -)(_MATRIX &B) {
 		/// @fixme exception
 	}
 
-	_MATRIX C(rows(), cols());
+	_MATRIX C;
 
 	for (int i = 0; i < rows(); i++) {
 		for (int j = 0; j < cols(); j++) {
-			set(i, j, get(i, j) - B.get(i, j));
+			C.set(i, j, get(i, j) - B.get(i, j));
 		}
 	}
 
@@ -103,7 +74,7 @@ _MATRIX_METHOD(_MATRIX, operator *)(_MATRIX &B) {
 	if (cols() != B.rows()) {
 		/// @fixme exception
 	}
-	_MATRIX C(rows(), B.cols());
+	_MATRIX C;
 
 	TYPE_DATA value;
 	for (int i = 0; i < rows(); i++) {
@@ -124,14 +95,13 @@ _MATRIX_METHOD(_MATRIX, operator /)(_MATRIX &B) {
 	if (cols() != B.rows()) {
 		/// @fixme exception
 	}
-	_MATRIX C(rows(), B.cols());
-
+	_MATRIX C;
 
 	return C;
 }
 
 _MATRIX_METHOD(_MATRIX, transposed)() {
-	Matrix<TYPE_DATA> C(cols(), rows());
+	_MATRIX C(cols(), rows());
 
 	for (int i = 0; i < rows(); i++) {
 		for (int j = 0; j < cols(); j++) {
@@ -143,19 +113,33 @@ _MATRIX_METHOD(_MATRIX, transposed)() {
 }
 
 _MATRIX_METHOD(void, set)(int i, int j, TYPE_DATA value) {
+	if (value == 0) {
+		values[i].erase(j);
+		if (! values[i].size()) {
+			values.erase(i);
+		}
+	}
+
 	values[i][j] = value;
+
+	if (++i > m) {
+		m = i;
+	}
+	if (++j > n) {
+		n = j;
+	}
 }
 
 _MATRIX_METHOD(TYPE_DATA, get)(int i, int j) {
 	if (i >= rows() || j >= cols()) {
 		/// @fixme exception
 	}
+
 	return values[i][j];
 }
 
-
-
 _MATRIX_METHOD(void, print)() {
+	std::cout << "Print " << rows() << " x " << cols() << std::endl;
 	for (int i = 0; i < rows(); i++) {
 		for (int j = 0; j < cols(); j++) {
 			std::cout << get(i, j) << " ";
