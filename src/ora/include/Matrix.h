@@ -1,3 +1,20 @@
+/**
+ * This file is part of ORA.
+ *
+ * ORA is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ORA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef _MATRIX_H
 #define _MATRIX_H
 
@@ -32,7 +49,9 @@ public:
 	_MATRIX transposed();
 	void print();
 	void set(int i, int j, TYPE_DATA value);
+	void set_all(int m, int n, TYPE_DATA **values);
 	TYPE_DATA get(int i, int j);
+
 
 private:
 
@@ -101,7 +120,7 @@ _MATRIX_METHOD(_MATRIX, operator /)(_MATRIX &B) {
 }
 
 _MATRIX_METHOD(_MATRIX, transposed)() {
-	_MATRIX C(cols(), rows());
+	_MATRIX C;
 
 	for (int i = 0; i < rows(); i++) {
 		for (int j = 0; j < cols(); j++) {
@@ -130,6 +149,14 @@ _MATRIX_METHOD(void, set)(int i, int j, TYPE_DATA value) {
 	}
 }
 
+_MATRIX_METHOD(void, set_all)(int m, int n, TYPE_DATA **values) {
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			set(i, j, values[i][j]);
+		}
+	}
+}
+
 _MATRIX_METHOD(TYPE_DATA, get)(int i, int j) {
 	if (i >= rows() || j >= cols()) {
 		/// @fixme exception
@@ -147,6 +174,7 @@ _MATRIX_METHOD(void, print)() {
 		std::cout << std::endl;
 	}
 }
+
 
 
 };
