@@ -2,7 +2,7 @@
 
 CC=g++
 LCFLAGS=-std=c++11 -c -Wall -I./include -fPIC
-SOURCES=Matrix.cpp
+SOURCES=Matrix.cpp Jacobi.cpp Gauss.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIB=libOra.so
 

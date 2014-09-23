@@ -28,7 +28,8 @@
 #define Bool bool
 */
 #include "Matrix.h"
-
+#include "Jacobi.h"
+#include "Gauss.h"
 
 //#define DMatrix Matrix<double>
 

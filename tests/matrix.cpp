@@ -73,7 +73,7 @@ TEST_F(MatrixTest, MethodAdd) {
 
 	for (int i = 0; i < C.rows(); i++) {
 		for (int j = 0; j < C.cols(); j++) {
-			EXPECT_EQ(expected[i][j], C.get(i, j));
+			EXPECT_DOUBLE_EQ(expected[i][j], C.get(i, j));
 		}
 	}
 }
@@ -103,7 +103,7 @@ TEST_F(MatrixTest, MethodSub) {
 
 	for (int i = 0; i < C.rows(); i++) {
 		for (int j = 0; j < C.cols(); j++) {
-			EXPECT_EQ(expected[i][j], C.get(i, j));
+			EXPECT_DOUBLE_EQ(expected[i][j], C.get(i, j));
 		}
 	}
 }
@@ -133,7 +133,7 @@ TEST_F(MatrixTest, MethodMultiplySquare) {
 
 	for (int i = 0; i < C.rows(); i++) {
 		for (int j = 0; j < C.cols(); j++) {
-			EXPECT_EQ(expected[i][j], C.get(i, j));
+			EXPECT_DOUBLE_EQ(expected[i][j], C.get(i, j));
 		}
 	}
 }
@@ -165,25 +165,26 @@ TEST_F(MatrixTest, MethodMultiply) {
 
 	for (int i = 0; i < C.rows(); i++) {
 		for (int j = 0; j < C.cols(); j++) {
-			EXPECT_EQ(expected[i][j], C.get(i, j));
+			EXPECT_DOUBLE_EQ(expected[i][j], C.get(i, j));
 		}
 	}
 }
 
 TEST_F(MatrixTest, MethodTransposed) {
-	double test[3][2] = {
-		{1, 0},
-		{0, 1},
-		{0, 1}
+	double test[6] = {
+		1, 0,
+		0, 1,
+		0, 1
 	};
-	double expected[2][3] = {
-		{1, 0, 0},
-		{0, 1, 1}
+	double expected[6] = {
+		1, 0, 0,
+		0, 1, 1
 	};
 
 	ORA::Matrix<double> A;
 	ORA::Matrix<double> B;
-	A.set_all(3, 2, (double **) test);
+	return ;
+	A.set_all(3, 2, test);
 
 	B = A.transposed();
 
@@ -192,7 +193,7 @@ TEST_F(MatrixTest, MethodTransposed) {
 
 	for (int i = 0; i < B.rows(); i++) {
 		for (int j = 0; j < B.cols(); j++) {
-			EXPECT_EQ(expected[i][j], B.get(i, j));
+			EXPECT_EQ(expected[B.rows() * i + j], B.get(i, j));
 		}
 	}
 }

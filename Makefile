@@ -10,7 +10,7 @@ EXECUTABLE=prod
 
 test: libs 
 	cd tests/ && $(MAKE)
-	./tests/test
+	cd tests/ && ./test
 
 all: $(SOURCES) $(EXECUTABLE)
 
@@ -18,7 +18,7 @@ $(EXECUTABLE): $(OBJECTS) libs
 	#$(CC) -g $(CFLAGS) $(LDFLAGS) $(OBJECTS)  -o $@
 
 libs:
-	cd src/ora && $(MAKE) && cd ../../
+	cd src/ora && $(MAKE)
 
 .cpp.o:
 	$(CC) -c $(CFLAGS) $< -o $@

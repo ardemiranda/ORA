@@ -49,7 +49,8 @@ public:
 	_MATRIX transposed();
 	void print();
 	void set(int i, int j, TYPE_DATA value);
-	void set_all(int m, int n, TYPE_DATA **values);
+	void set_all(int m, int n, TYPE_DATA values[]);
+	TYPE_DATA * get_all();
 	TYPE_DATA get(int i, int j);
 
 
@@ -149,12 +150,39 @@ _MATRIX_METHOD(void, set)(int i, int j, TYPE_DATA value) {
 	}
 }
 
-_MATRIX_METHOD(void, set_all)(int m, int n, TYPE_DATA **values) {
+_MATRIX_METHOD(void, set_all)(int m, int n, TYPE_DATA values[]) {
+	if (n == 1) {
+		for (int i = 0; i < m; i++) {
+			set(i, 0, values[i]);
+		}
+		return ;
+	}
+
 	for (int i = 0; i < m; i++) {
 		for (int j = 0; j < n; j++) {
-			set(i, j, values[i][j]);
+			set(i, j, values[m * i + j]);
 		}
 	}
+}
+
+_MATRIX_METHOD(TYPE_DATA *, get_all)() {
+	double *values;
+	if (cols() == 1) {
+		values = new double[rows()];
+		for (int i = 0; i < rows(); i++) {
+			values[i] = get(i, 0);
+		}
+
+		return values;
+	}
+
+	values = new double[rows() * cols()];
+	for (int i = 0; i < rows(); i++) {
+		for (int j = 0; j < cols(); j++) {
+			values[rows() * i + j] = get(i, j);
+		}
+	}
+	return values;
 }
 
 _MATRIX_METHOD(TYPE_DATA, get)(int i, int j) {
